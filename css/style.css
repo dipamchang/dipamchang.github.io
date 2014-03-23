@@ -328,11 +328,9 @@ div.stripeBig img{
 
 .pageheader {
 	background: #f3f3f3;
-	/*background-image: url("../img/static/mech_engg.gif");
-	background-repeat: no-repeat;*/
 	position: relative;
 	padding: 10px 0 45px 0;
-	overflow: auto;
+	
 }
 
 .pageheader:after {
