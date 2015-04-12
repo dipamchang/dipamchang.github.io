@@ -1,0 +1,246 @@
+
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>Photo Floppy - More Info</title>
+<meta name="description" content="">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+
+
+<script src="/PhotoFloppy/static_assets/500px.js"></script>
+<link rel="stylesheet" href="/PhotoFloppy/static_assets/dist/semantic.min.css">
+<link	href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,vietnamese'
+	rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+	<div class="ui purple inverted menu">
+		<!-- 		<a class="item"> <img src="resources/trestor-logo-home.png"></a> -->
+		<a class="item">
+			<h2>[O]Floppy</h2>
+		</a> <a class="item" href="#"> Home </a> <a class=" item" href="">
+			Upload </a> <a class=" item" href=""> Trending </a>
+		<!-- 		<a class=" item" href="https://trestor.org/faq"> FAQ's </a>  -->
+		<!-- 		<a class=" item" href="https://trestor.org/app"> Download Wallet App</a> -->
+		<div class="right menu" id="avatar"></div>
+	</div>
+
+	<div class="ui page grid main lateload">
+		<div class="row">
+			<div class="column">
+				<div id="moreInfo1" class="ui purple segment">	
+					<img id="largeImage" class="ui centered image" src="/PhotoFloppy/static_assets/1.png">
+					<h2 class="ui header">
+						<img id="userAvatar" src="/PhotoFloppy/static_assets/1.png"	class="ui circular image">
+						<div class="content" id="name"></div>
+					</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div 
+		class="ui page lateload two column middle aligned relaxed fitted stackable  grid ">
+
+		<div class="row">
+
+			<div class="column">
+				<div class="ui purple segment">
+					<h2 class="ui header">Description</h2>
+					<div id="imageDescription"></div>
+				</div>
+			</div>
+			<div class="ui vertical divider"></div>
+			<div class="column">
+				<table class="ui definition compact purple table">
+					<tbody>
+						<tr>
+							<td class="four wide column">Camera</td>
+							<td id="camera">-NA-</td>
+						</tr>
+						<tr>
+							<td>Lens</td>
+							<td id="lens">-NA-</td>
+						</tr>
+						<tr>
+							<td>Shutter Speed</td>
+							<td id="category">-NA-</td>
+						</tr>
+						<tr>
+							<td>Rating</td>
+							<td id="rating">-NA-</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="container3" class="ui page grid main lateload">
+		<div class="row">
+			<div class="column">
+				<div class="ui purple segment">
+					<div id="commentsSection" class="ui comments">
+						<h2 class="ui dividing header">Comments</h2>
+<!-- 						<form class="ui reply form"> -->
+<!-- 							<div class="field"> -->
+<!-- 								<textarea></textarea> -->
+<!-- 							</div> -->
+<!-- 							<div class="ui blue labeled submit icon button"> -->
+<!-- 								<i class="icon edit"></i> Add Reply -->
+<!-- 							</div> -->
+<!-- 						</form> -->
+						
+					</div>
+					<div id="commentsLoader" class="middle aligned"><div class="ui active inline loader"></div><h3>Loading Comments . . .</h3></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<div id="imagegrid" class="ui page doubling three column grid"></div>
+
+	<div  class="ui page grid main">
+		<div class="row">
+			<div class="column">
+				<div class="ui segment" id="loadMessage">
+					<div class="ui active dimmer">
+						<div class="ui text loader"></div>
+					</div>
+					<p>
+					<h2 align="center">Fetching Image Info</h2>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- build:js scripts/vendor.js -->
+	<!-- bower:js -->
+	<script
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/dist/semantic.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/initiator.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('.lateload').hide();
+		_500px.init({
+			sdk_key: '18b1f18f98ff6255e8000e1f655ce68ddb44c83d'
+		});
+		var me;
+		var count = 0;
+		var photoid = getParameterByName('id');
+		_500px.on('authorization_obtained', function (status) {
+			$('#loadMessage').show();
+			_500px.api('/users', function (response) {
+				me = response.data.user;
+				if(photoid != ""){
+					getImageInformation(photoid);
+				}else {
+					$('#loadMessage').html('<p><h2 align="center">Image ID Not Found</h2></p>');
+				}
+				$('#avatar').html('<a class="active item" ><img class="ui avatar image" src="'+me.userpic_url+'">'+me.username+'</a>');
+			});
+		});
+
+		_500px.getAuthorizationStatus(function (status) {
+			if (status == 'not_logged_in' || status == 'not_authorized') {
+				_500px.login();
+			}
+		});
+
+
+		$(window).scroll(function(){
+			if  (($(window).scrollTop()) == ($(document).height() - $(window).height())){
+				count++;
+				//Check for authentication
+				loadComments(count);
+				
+			}
+		});
+		
+		function getImageInformation(id){
+
+			_500px.api('/photos/'+id, { image_size:4 }, function (response) {
+				if (response.data.status === 404 ) {
+					$('#loadMessage').html('<p><h2 align="center">Image Not Found</h2></p>');
+				} else {
+					var imageInfo = response.data.photo
+					$("#largeImage").attr("src",imageInfo.image_url);
+					$("#userAvatar").attr("src",imageInfo.user.userpic_url);
+					$("#name").html(imageInfo.name +'<div class="sub header">@'+imageInfo.user.username+'</div>');
+					$("#imageDescription").html('<p>'+imageInfo.description+'</p><div class="ui divider"></div><p>'+imageInfo.times_viewed+' Views | '+imageInfo.positive_votes_count+' Likes | '+imageInfo.favorites_count+' Faves </p>');
+					$("#camera").html(imageInfo.camera);
+					$("#lens").html(imageInfo.lens);
+					$("#category").html(imageInfo.shutter_speed);
+					$("#rating").html(imageInfo.rating);
+					$('#loadMessage').hide();
+					$('.lateload').show();
+				}
+			});
+		}
+		
+		
+		function loadComments(pagenum){
+			
+			_500px.api('/photos/'+photoid+'/comments', { page: pagenum, nested:1 }, function (response) {
+				if (response.data.comments.length == 0) {
+					$('#commentsLoader').html('<p><h2 align="center">No more Comments to load</h2></p>');
+				} else {
+					$.each(response.data.comments, function () {
+						var entireNestedComment = "";
+						entireNestedComment += ('<div class="comment"><a class="avatar"> <img src="'+this.user.userpic_url+'"></a><div class="content"><a class="author">'+this.user.fullname+'</a><div class="metadata"><span class="date">@'+this.user.username+'</span></div><div class="text">'+this.body+'</div></div>');
+						var creplies = this.replies;
+						if(creplies.length != 0){
+							entireNestedComment += ('<div class="comments">');
+							$.each(this.replies, function () {
+								entireNestedComment += ('<div class="comment"><a class="avatar"> <img src="'+this.user.userpic_url+'"></a><div class="content"><a class="author">'+this.user.fullname+'</a><div class="metadata"><span class="date">@'+this.user.username+'</span></div><div class="text">'+this.body+'</div></div></div>');								
+							});
+							entireNestedComment += ('</div>');
+						}
+						
+						entireNestedComment += ('</div');
+						$('#commentsSection').append(entireNestedComment);
+					});
+				}
+			});
+			
+		}
+		
+		
+		
+		
+		
+	});
+
+
+</script>
+	<!-- endbower -->
+	<!-- endbuild -->
+</body>
+</html>
