@@ -1,0 +1,116 @@
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>Photo Floppy - More Info</title>
+<meta name="description" content="">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<script src="/PhotoFloppy/static_assets/500px.min.js"></script>
+<link rel="stylesheet" href="/PhotoFloppy/static_assets/dist/semantic.min.css">
+<link	href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,vietnamese'
+	rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div class="ui purple inverted menu">
+		<a class="brand item"><h2>[O]Floppy</h2></a> 
+		<a class="item" href="home.html">Home</a> 
+		<a class="item" href="trending.html">Trending</a> 
+		<a class="item" href="search.html">Search</a>
+		<div class="right menu" id="avatar"></div>
+	</div>
+
+	<div class="ui page grid main lateload">
+		<div class="row">
+			<div class="column">
+				<div id="moreInfo1" class="ui purple segment">	
+					<img id="largeImage" class="ui centered image" src="/PhotoFloppy/static_assets/1.png">
+					<h2 class="ui header">
+						<img id="userAvatar" src="/PhotoFloppy/static_assets/1.png"	class="ui circular image">
+						<div class="content" id="name"></div>
+					</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div 
+		class="ui page lateload two column middle aligned relaxed fitted stackable  grid ">
+		<div class="row">
+			<div class="column">
+				<div class="ui purple segment">
+					<h2 class="ui header">Description</h2>
+					<div id="imageDescription"></div>
+				</div>
+			</div>
+			<div class="ui vertical divider"></div>
+			<div class="column">
+				<table class="ui definition compact purple table">
+					<tbody>
+						<tr>
+							<td class="four wide column">Camera</td>
+							<td id="camera">-NA-</td>
+						</tr>
+						<tr>
+							<td>Lens</td>
+							<td id="lens">-NA-</td>
+						</tr>
+						<tr>
+							<td>Shutter Speed</td>
+							<td id="category">-NA-</td>
+						</tr>
+						<tr>
+							<td>Rating</td>
+							<td id="rating">-NA-</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div id="container3" class="ui page grid main lateload">
+		<div class="row">
+			<div class="column">
+				<div class="ui purple segment">
+					<div id="commentsSection" class="ui comments">
+						<h2 class="ui dividing header">Comments</h2>
+						
+						<div class="ui reply form" id="commentForm">
+							<div class="field">
+								<textarea name="coment"></textarea>
+							</div>
+							<div id="submitComment" class="ui blue labeled icon submit button">
+								<i class="icon edit"></i> Add Comment
+							</div>
+						</div>
+					</div>
+					<div id="commentsLoader" class="middle aligned"><div class="ui active inline loader"></div><h3>Loading Comments . . .</h3></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="imagegrid" class="ui page doubling three column grid"></div>
+	<div  class="ui page grid main">
+		<div class="row">
+			<div class="column">
+				<div class="ui segment" id="loadMessage">
+					<div class="ui active dimmer">
+						<div class="ui text loader"></div>
+					</div>
+					<p>
+					<h2 align="center">Fetching Image Info</h2>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/dist/semantic.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/initiator.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){function e(e){_500px.api("/photos/"+e,{image_size:4},function(e){if(e.success)if(404===e.data.status)$("#loadMessage").html('<p><h2 align="center">Image Not Found</h2></p>');else{var s=e.data.photo;$("#largeImage").attr("src",s.image_url),$("#userAvatar").attr("src",s.user.userpic_url),$("#name").html(s.name+'<div class="sub header">@'+s.user.username+"</div>"),$("#imageDescription").html("<p>"+s.description+'</p><div class="ui divider"></div><p>'+s.times_viewed+" Views | "+s.positive_votes_count+" Likes | "+s.favorites_count+" Faves </p>"),$("#camera").html(s.camera),$("#lens").html(s.lens),$("#category").html(s.shutter_speed),$("#rating").html(s.rating),$("#loadMessage").hide(),$(".lateload").show()}else alert("Unable to complete request: "+e.status+" - "+e.error_message)})}function s(e){_500px.api("/photos/"+o+"/comments",{page:e,nested:1},function(e){e.success?0==e.data.comments.length?$("#commentsLoader").html('<p><h2 align="center">No more Comments to load</h2></p>'):$.each(e.data.comments,function(){var e="";e+='<div class="comment"><a class="avatar"> <img src="'+this.user.userpic_url+'"></a><div class="content"><a class="author">'+this.user.fullname+'</a><div class="metadata"><span class="date">@'+this.user.username+'</span></div><div class="text">'+this.body+"</div></div>";var s=this.replies;0!=s.length&&(e+='<div class="comments">',$.each(this.replies,function(){e+='<div class="comment"><a class="avatar"> <img src="'+this.user.userpic_url+'"></a><div class="content"><a class="author">'+this.user.fullname+'</a><div class="metadata"><span class="date">@'+this.user.username+'</span></div><div class="text">'+this.body+"</div></div></div>"}),e+="</div>"),e+="</div",$("#commentsSection").append(e)}):alert("Unable to complete request: "+e.status+" - "+e.error_message)})}function t(){_500px.api("/photos/"+o+"/comments","post",{body:getFieldValue("coment")},function(e){alert(e.success?e.data.message:"Unable to complete request: "+e.status+" - "+e.error_message)})}$(".lateload").hide(),_500px.init({sdk_key:"18b1f18f98ff6255e8000e1f655ce68ddb44c83d"});var a,i=0,o=getParameterByName("id");_500px.on("authorization_obtained",function(){$("#loadMessage").show(),_500px.api("/users",function(s){s.success?(a=s.data.user,""!=o?e(o):$("#loadMessage").html('<p><h2 align="center">Image ID Not Found</h2></p>'),$("#avatar").html('<a class="item" ><img class="ui avatar image" align="left" src="'+a.userpic_url+'"/><b>'+a.username+"</b></a>")):alert("Unable to complete request: "+s.status+" - "+s.error_message)})}),_500px.getAuthorizationStatus(function(e){("not_logged_in"==e||"not_authorized"==e)&&_500px.login()}),$(window).scroll(function(){$(window).scrollTop()==$(document).height()-$(window).height()&&(i++,s(i))}),$("#commentForm").form({coment:{identifier:"coment",rules:[{type:"empty",prompt:"Please enter comment."}]}},{inline:!0,on:"blur",transition:"fade down",onSuccess:t})});
+	</script>
+</body>
+</html>

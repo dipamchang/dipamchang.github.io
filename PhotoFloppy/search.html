@@ -1,0 +1,90 @@
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>Photo Floppy - Search Images</title>
+<meta name="description" content="">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+
+<script src="/PhotoFloppy/static_assets/500px.min.js"></script>
+<link rel="stylesheet"
+	href="/PhotoFloppy/static_assets/dist/semantic.min.css">
+<link
+	href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,vietnamese'
+	rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div class="ui purple inverted menu">
+		<a class="brand item"><h2>[O]Floppy</h2></a> 
+		<a class="item" href="home.html">Home</a> 
+		<a class="item" href="trending.html">Trending</a> 
+		<a class="active item" href="search.html">Search</a>
+		<div class="right menu" id="avatar"></div>
+	</div>
+
+	<div class="ui page grid ">
+		<div class="row">
+			<div class="column">
+				<div class="ui form segment" id="searchForm">
+					<div class="two fields">
+						<div class="field">
+							<label>Search phrase</label> <input placeholder="Searck keywords . ."
+								name="search" type="text">
+						</div>
+						<div class="field">
+							<label>Sort On</label>
+							<div class="ui selection dropdown">
+								<div class="default text">Choose a sort</div>
+    							<input name="sort" type="hidden" value="_score">
+    							<i class="dropdown icon"></i>
+							    <div class="menu">
+							        <div class="item" data-value="_score">Relevance</div>
+							        <div class="item" data-value="created_at">Most Recent</div>
+							        <div class="item" data-value="rating">Rating</div>
+							        <div class="item" data-value="highest_rating">Highest Rating</div>
+							        <div class="item" data-value="times_viewed">Views</div>
+							        <div class="item" data-value="votes_count">Votes</div>
+							        <div class="item" data-value="favorites_count">Favorites</div>
+							        <div class="item" data-value="comments_count">Most Comments</div>
+							    </div>
+   							</div>
+						</div>
+					</div>
+					<div class="ui purple submit button">Search</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="column">
+				<h2 class="ui dividing header">
+					Search Results<a class="anchor" id="types"></a>
+				</h2>
+			</div>
+		</div>
+	</div>
+	<div id="searchImageGrid" class="ui page doubling three column grid"></div>
+	<div class="ui page grid ">
+		<div class="row">
+			<div class="column">
+				<div class="ui segment" id="loadMessage">
+					<div class="ui active dimmer">
+						<div class="ui text loader"></div>
+					</div>
+					<p>
+					<h2 align="center">Loading Photos . . .</h2>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/dist/semantic.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/initiator.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){function e(){$("#searchImageGrid").empty(),a=getFieldValue("search"),sortM=getFieldValue("sort"),i=1,s(i)}function s(e){$("#loadMessage").show(),_500px.api("/photos/search",{term:a,sort:sortM,page:e,rpp:o,image_size:3},function(e){e.success?0==e.data.photos.length?$("#loadMessage").html('<p><h2 align="center">No Search Results Fount</h2></p>'):$.each(e.data.photos,function(){$("#searchImageGrid").append('<div class="column"><div class="ui fluid purple card"><a href="photoInfo.html?id='+this.id+'" target="_blank" class="image"><img src="'+this.image_url+'" /></a><div class="content"><a class="header">'+this.name+'</a><a class="meta">'+this.user.username+'</a></div><div class="extra content"><span class="left floated like"> <i class="like icon"></i> '+this.positive_votes_count+' Likes</span><span class="right floated star"> <i class="star icon"></i> '+this.favorites_count+" Favorites</span></div></div></div>")}):alert("Unable to complete request: "+e.status+" - "+e.error_message)})}$("#loadMessage").hide(),$("#searchForm").form({search:{identifier:"search",rules:[{type:"empty",prompt:"Please enter search keyword"}]},sort:{identifier:"sort",rules:[{type:"empty",prompt:"Please choose a sort method"}]}},{inline:!0,on:"blur",transition:"fade down",onSuccess:e});var a;_500px.init({sdk_key:"18b1f18f98ff6255e8000e1f655ce68ddb44c83d"});var t,i=1,o=9;jQuery.browser.mobile&&(o=6),_500px.on("authorization_obtained",function(){_500px.api("/users",function(e){e.success?(t=e.data.user,$("#avatar").html('<a class="item" ><img class="ui avatar image" align="left" src="'+t.userpic_url+'"/><b>'+t.username+"</b></a>")):alert("Unable to complete request: "+e.status+" - "+e.error_message)})}),_500px.getAuthorizationStatus(function(e){("not_logged_in"==e||"not_authorized"==e)&&_500px.login()}),$(window).scroll(function(){$(window).scrollTop()==$(document).height()-$(window).height()&&(i++,s(i))})});
+	</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>Photo Floppy - Your Images</title>
+<meta name="description" content="">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+
+<script src="/PhotoFloppy/static_assets/500px.min.js"></script>
+
+<link rel="stylesheet"
+	href="/PhotoFloppy/static_assets/dist/semantic.min.css">
+<link
+	href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,vietnamese'
+	rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+	<div class="ui purple inverted menu">
+		<a class="item"><h2>[O]Floppy</h2></a> 
+		<a class="active item" href="home.html">Home</a> 
+		<a class="item" href="trending.html">Trending</a> 
+		<a class="item" href="search.html">Search</a>
+		<div class="right menu" id="avatar"></div>
+	</div>
+	<div class="ui page grid main">
+		<div class="row">
+			<div class="column">
+				<h2 class="ui dividing header">
+					Your Images<a class="anchor" id="types"></a>
+				</h2>
+			</div>
+		</div>
+	</div>
+	<div id="imagegrid" class="ui page doubling three column grid"></div>
+	<div class="ui page grid main">
+		<div class="row">
+			<div class="column">
+				<div class="ui segment" id="loadMessage">
+					<div class="ui active dimmer">
+						<div class="ui text loader"></div>
+					</div>
+					<p>
+					<h2 align="center">Fetching your awesome memories ! Hang on !
+						!</h2>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/dist/semantic.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/initiator.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){function e(e){_500px.api("/photos",{feature:"user",user_id:a.id,page:e,rpp:i,image_size:3},function(e){e.success?0==e.data.photos.length?$("#loadMessage").html('<p><h2 align="center">No more Images to load</h2></p>'):$.each(e.data.photos,function(){$("#imagegrid").append('<div class="column"><div class="ui fluid purple card"><a href="photoInfo.html?id='+this.id+'" target="_blank" class="image"><img src="'+this.image_url+'" /></a><div class="content"><a class="header">'+this.name+"</a></div></div></div>")}):alert("Unable to complete request: "+e.status+" - "+e.error_message)})}_500px.init({sdk_key:"18b1f18f98ff6255e8000e1f655ce68ddb44c83d"});var a,t=1,i=9;jQuery.browser.mobile&&(i=6),_500px.on("authorization_obtained",function(){_500px.api("/users",function(i){i.success?(a=i.data.user,e(t),$("#avatar").html('<a class="item" ><img class="ui avatar image" align="left" src="'+a.userpic_url+'"/><b>'+a.username+"</b></a>")):alert("Unable to complete request: "+i.status+" - "+i.error_message)})}),_500px.getAuthorizationStatus(function(e){("not_logged_in"==e||"not_authorized"==e)&&_500px.login()}),$(window).scroll(function(){$(window).scrollTop()==$(document).height()-$(window).height()&&(t++,e(t))})});
+	</script>
+</body>
+</html>

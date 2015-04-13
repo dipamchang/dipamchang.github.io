@@ -1,0 +1,61 @@
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>Photo Floppy - Trending Images</title>
+<meta name="description" content="">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+
+<script src="/PhotoFloppy/static_assets/500px.min.js"></script>
+
+<link rel="stylesheet"
+	href="/PhotoFloppy/static_assets/dist/semantic.min.css">
+<link
+	href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,vietnamese'
+	rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+	<div class="ui purple inverted menu">
+		<a class="brand item"><h2>[O]Floppy</h2></a> 
+		<a class="item" href="home.html">Home</a> 
+		<a class="active item" href="trending.html">Trending</a> 
+		<a class="item" href="search.html">Search</a>
+		<div class="right menu" id="avatar"></div>
+	</div>
+
+	<div class="ui page grid ">
+		<div class="row">
+			<div class="column">
+				<h2 class="ui dividing header">
+					Trending Images<a class="anchor" id="types"></a>
+				</h2>
+			</div>
+		</div>
+	</div>
+	<div id="trendingImageGrid" class="ui page doubling three column grid"></div>
+	<div class="ui page grid ">
+		<div class="row">
+			<div class="column">
+				<div class="ui segment" id="loadMessage">
+					<div class="ui active dimmer">
+						<div class="ui text loader"></div>
+					</div>
+					<p>
+						<h2 align="center">Fetching the latest Trending Photos ! hang On ! !
+						</h2>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/dist/semantic.min.js"></script>
+	<script src="/PhotoFloppy/static_assets/initiator.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){function a(a){_500px.api("/photos",{feature:"popular",page:a,rpp:s,image_size:3},function(a){a.success?0==a.data.photos.length?$("#loadMessage").html('<p><h2 align="center">No more Images to load</h2></p>'):$.each(a.data.photos,function(){$("#trendingImageGrid").append('<div class="column"><div class="ui fluid purple card"><a href="photoInfo.html?id='+this.id+'" target="_blank" class="image"><img src="'+this.image_url+'" /></a><div class="content"><a class="header">'+this.name+'</a><a class="meta">'+this.user.username+'</a></div><div class="extra content"><span class="left floated like"> <i class="like icon"></i> '+this.positive_votes_count+' Likes</span><span class="right floated star"> <i class="star icon"></i> '+this.favorites_count+" Favorites</span></div></div></div>")}):alert("Unable to complete request: "+a.status+" - "+a.error_message)})}_500px.init({sdk_key:"18b1f18f98ff6255e8000e1f655ce68ddb44c83d"});var e,t=1,s=9;jQuery.browser.mobile&&(s=6),_500px.on("authorization_obtained",function(){_500px.api("/users",function(s){s.success?(e=s.data.user,a(t),$("#avatar").html('<a class="item" ><img class="ui avatar image" align="left" src="'+e.userpic_url+'"/><b>'+e.username+"</b></a>")):alert("Unable to complete request: "+s.status+" - "+s.error_message)})}),_500px.getAuthorizationStatus(function(a){("not_logged_in"==a||"not_authorized"==a)&&_500px.login()}),$(window).scroll(function(){$(window).scrollTop()==$(document).height()-$(window).height()&&(t++,a(t))})});
+	</script>
+</body>
+</html>
